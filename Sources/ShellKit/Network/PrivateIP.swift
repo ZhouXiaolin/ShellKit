@@ -207,8 +207,15 @@ public enum PrivateIP {
         // Strip zone identifier `%...`.
         let text = raw.split(separator: "%").first.map(String.init) ?? raw
         if text.isEmpty { return nil }
-        // At most one `::` allowed.
-        let doubleColonRanges = text.ranges(of: "::")
+        // At most one `::` allowed. (iOS 15 fork: no `ranges(of:)`,
+        // which is iOS 16+ — scan non-overlapping matches by hand.)
+        var doubleColonRanges: [Range<String.Index>] = []
+        var searchStart = text.startIndex
+        while doubleColonRanges.count < 2,
+              let found = text.range(of: "::", range: searchStart..<text.endIndex) {
+            doubleColonRanges.append(found)
+            searchStart = found.upperBound
+        }
         if doubleColonRanges.count > 1 { return nil }
 
         let head: [Substring]
