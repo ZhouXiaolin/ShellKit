@@ -57,7 +57,7 @@ let package = Package(
     name: "ShellKit",
     platforms: [
         .macOS(.v13),
-        .iOS(.v16),
+        .iOS(.v15),
         .tvOS(.v16),
         .watchOS(.v9),
     ],
